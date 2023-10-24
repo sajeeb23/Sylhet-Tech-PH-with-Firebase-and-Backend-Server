@@ -25,6 +25,8 @@ async function run() {
         await client.connect();
 
         const productCollection = client.db('productDB').collection('product');
+        
+        const brandCollection = client.db('productDB').collection('Brand');
 
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find();
@@ -38,6 +40,18 @@ async function run() {
             const id = req.params.id;
             const query = {_id: new ObjectId(id)}
             const result = await productCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.get('/brands', async(req, res) => {
+            const result = await brandCollection.find().toArray();
+            res.send(result);
+        })
+
+        app.get('/product/:brandname', async(req, res) => {
+            const brandname = req.params.brandname;
+            const query = {brandname: brandname}
+            const result = await productCollection.find(query).toArray();
             res.send(result);
         })
 
