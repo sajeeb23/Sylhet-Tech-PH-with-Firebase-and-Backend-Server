@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+app.use(express.json());
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
@@ -65,7 +66,7 @@ async function run() {
         });
 
         
-        app.put('/products/:id/', async(req, res) =>{
+        app.put('/products/:id', async(req, res) =>{
             const id = req.params.id;
             const filter = {_id: new ObjectId(id)}
             const option = {upsert: true};
@@ -76,6 +77,7 @@ async function run() {
                 }
             }
             const result = await productCollection.updateOne(filter, product, option)
+            res.send(result);
         }
 
         )
